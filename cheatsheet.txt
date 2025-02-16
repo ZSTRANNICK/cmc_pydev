@@ -1,0 +1,2 @@
+# github authentication with ssh
+ssh -T git@github.com
