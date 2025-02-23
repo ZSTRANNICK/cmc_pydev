@@ -1,2 +1,51 @@
-# github authentication with ssh
+# git
+
+## github authentication with ssh
 ssh -T git@github.com
+
+## initialize repository
+git init
+
+## clone repository
+git clone
+
+## update local repository
+git pull
+//pull = fetch + merge
+
+## add changes to commit
+git add
+
+//
+--interactive
+patch
+
+## commit change
+git commit
+
+// add all
+-a
+
+// change last commit
+--amend
+
+##
+git log
+
+## rollback
+git reset
+
+// to last commit
+HEAD
+
+// to previous commit
+HEAD~
+
+##
+git rebase
+
+//
+--interactive
+
+# venv
+source [path to bin/activate]
