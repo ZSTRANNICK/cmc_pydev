@@ -1,12 +1,27 @@
 from random import choice
 from copy import copy
 import argparse
-from cowsay import cowsay, get_random_cow
+from cowsay import cowsay, get_random_cow, read_dot_cow
+from io import StringIO
 
+mycow = read_dot_cow(StringIO("""
+$the_cow = <<EOC;
+         $thoughts
+        /|__/|
+       / o__o|__
+      /      __V
+ /\   /    -'`\\
+|  \  /       \\
+\\\\\\\\\\\\\\\\-/  |,  ,| \\
+\    /  ||  || \\
+ `.-_\_ ||  ||_/
+       `^^``^^
+       EOC
+"""))
 
 def ask(prompt: str, valid: list[str] = None) -> str:
     while True:
-        print(cowsay(prompt, cow=get_random_cow()))
+        print(cowsay(prompt, cowfile=mycow))
         res = input()
         if not valid or res in valid:
             return res
