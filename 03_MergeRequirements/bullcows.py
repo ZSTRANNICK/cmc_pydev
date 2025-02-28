@@ -48,7 +48,7 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
 parser = argparse.ArgumentParser()
 parser.add_argument("wordfile", type=str, help="name of the file with valid words")
-parser.add_argument("-l", "--length", type=int, help="length of the word", default=5)
+parser.add_argument("length", type=int, help="length of the word", default=5, nargs='?')
 args = parser.parse_args()
 
 words = []
