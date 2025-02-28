@@ -1,5 +1,6 @@
 from random import choice
 from copy import copy
+import argparse
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
@@ -43,3 +44,26 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
                     cows += 1
                     letter_count_cpy[guess[i]] -= 1
             inform("Bulls: {}, Cows: {}", bulls, cows)
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("wordfile", type=str, help="name of the file with valid words")
+parser.add_argument("-l", "--length", type=int, help="length of the word", default=5)
+args = parser.parse_args()
+
+words = []
+file = open(args.wordfile, "r")
+word = file.readline()
+while word:
+    word = word[:-1]
+    if len(word) == args.length:
+        words.append(word)
+    word = file.readline()
+file.close()
+
+if len(words) == 0:
+    print("There are no words with that length in your file")
+    exit()
+
+attempts = gameplay(ask, inform, words)
+print(f"You won! It took you {attempts} attempts.")
