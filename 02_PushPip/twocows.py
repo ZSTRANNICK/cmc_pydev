@@ -78,7 +78,7 @@ Same as -n, but for the second cow
 )
 
 parser.add_argument("message1", type=str, help="first message")
-parser.add_argument("message2", type=str, help="first message")
+parser.add_argument("message2", type=str, help="second message")
 
 args = parser.parse_args()
 
