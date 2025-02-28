@@ -1,18 +1,19 @@
 from random import choice
 from copy import copy
 import argparse
+from cowsay import cowsay, get_random_cow
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
     while True:
-        print(prompt)
+        print(cowsay(prompt, cow=get_random_cow()))
         res = input()
         if not valid or res in valid:
             return res
         
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
-    print(format_string.format(bulls, cows))
+    print(cowsay(format_string.format(bulls, cows), cow=get_random_cow()))
 
 
 def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
