@@ -164,6 +164,19 @@ class twocows(cmd.Cmd):
                           cowthink(posargs[1], cow=flagargs['F'][0], eyes=flagargs['E'][0], tongue=flagargs['T'][0])]))
 
 
+    def complete_cowsay(self, text, line, begidx, endidx):
+        words = (line[:endidx] + ".").split()
+        compl_dict = []
+        flag = isFlag(words[-2])
+        if flag and flag[0] in 'fF':
+            cow_list = list_cows()
+            compl_dict = [cow for cow in cow_list if cow.startswith(text)]
+        return compl_dict
+
+    def complete_cowthink(self, text, line, begidx, endidx):
+        return self.complete_cowsay(text, line, begidx, endidx)
+
+
     def do_list_cows(self, args):
         """Lists all cow file names in the given directory"""
         if args:
