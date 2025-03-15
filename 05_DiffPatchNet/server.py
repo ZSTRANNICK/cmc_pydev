@@ -45,11 +45,69 @@ async def chat(reader, writer):
                 else:
                     message = shlex.split(message)
                     if message[0] == "login":
-                        pass
+                        if len(message) > 2:
+                            writer.write("too many arguments\n".encode())
+                            continue
+                        if len(message) < 2:
+                            writer.write("not enough arguments\n".encode())
+                            continue
+                        if not message[1] in free_cows:
+                            writer.write(
+                                "no free cows with that name\n".encode())
+                            continue
+
+                        receive.cancel()
+                        del clients[me]
+                        free_cows.remove(message[1])
+
+                        print(me, "logs in as", message[1])
+                        for key, out in clients.items():
+                            if not key.startswith("UNAUTHORIZED"):
+                                if not me.startswith("UNAUTHORIZED"):
+                                    await out.put(f"SERVER: {me} logs out")
+                                await out.put(f"SERVER: {message[1]} logs in")
+
+                        me = message[1]
+                        clients[me] = asyncio.Queue()
+                        receive = asyncio.create_task(clients[me].get())
                     elif message[0] == "say":
-                        pass
+                        if len(message) > 3:
+                            writer.write("too many arguments\n".encode())
+                            continue
+                        if len(message) < 3:
+                            writer.write("not enough arguments\n".encode())
+                            continue
+                        if not message[1] in clients.keys():
+                            writer.write("no user with that name\n".encode())
+                            continue
+                        if me.startswith("UNAUTHORIZED"):
+                            writer.write(
+                                "you should be authorized "
+                                "to do that\n".encode())
+                            continue
+                        if message[1].startswith("UNAUTHORIZED"):
+                            writer.write(
+                                "you can't send messages"
+                                "to unauthorized users\n".encode())
+                            continue
+                        await clients[message[1]].put(cowthink(message[2],
+                                                               cow=me))
+                        await clients[me].put(cowthink(message[2], cow=me))
                     elif message[0] == "yield":
-                        pass
+                        if len(message) > 2:
+                            writer.write("too many arguments\n".encode())
+                            continue
+                        if len(message) < 2:
+                            writer.write("not enough arguments\n".encode())
+                            continue
+                        if me.startswith("UNAUTHORIZED"):
+                            writer.write(
+                                "you should be authorized "
+                                "to do that\n".encode())
+                            continue
+                        for key, out in clients.items():
+                            if not key.startswith("UNAUTHORIZED"):
+                                await out.put(cowsay(message[1], cow=me))
                     else:
                         writer.write("no such command\n".encode())
             elif q is receive:
