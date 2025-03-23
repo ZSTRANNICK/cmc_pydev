@@ -24,11 +24,24 @@ def msgclient(reciever, cmdclient):
                 print("\n" + message + "\n" + cmdclient.prompt + readline.get_line_buffer(), end="", flush=True)#
 
 
-def msgsend(sender, message):
-    global current_id
-    sender.sendall((str(current_id) + " " + message + "\n").encode())
-    current_id += 1
+def msgsend(sender, message, await_responce=False):
+    id = 0
+    if await_responce:
+        global current_id
+        id = current_id
+        current_id += 1
+        if current_id == 1000000:
+            current_id = 0
+    sender.sendall((str(id) + " " + message + "\n").encode())
 
+def awaitResponce():
+    global responces, current_id
+    id = current_id - 1
+    while True:
+        if id in responces:
+            responce = responces[id]
+            del responces[id]
+            return responce
 
 
 class client(cmd.Cmd):
@@ -55,6 +68,22 @@ class client(cmd.Cmd):
 
     def do_say(self, args):
         msgsend(self.sender, "say " + args)
+
+    def complete_say(self, text, line, begidx, endidx):
+        msgsend(self.sender, "who", True)
+        cows = awaitResponce().split()
+        
+        beginning = (line + ".").split()[-1][:-1]
+        completion_dict = [cow for cow in cows if cow.startswith(beginning)]
+        return completion_dict
+    
+    def complete_login(self, text, line, begidx, endidx):
+        msgsend(self.sender, "cows", True)
+        cows = awaitResponce().split()
+        
+        beginning = (line + ".").split()[-1][:-1]
+        completion_dict = [cow for cow in cows if cow.startswith(beginning)]
+        return completion_dict
 
 
 if __name__ == "__main__":
