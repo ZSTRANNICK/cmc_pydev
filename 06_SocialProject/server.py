@@ -71,8 +71,8 @@ async def chat(reader, writer):
                         for key, out in clients.items():
                             if not key.startswith("UNAUTHORIZED"):
                                 if not me.startswith("UNAUTHORIZED"):
-                                    await out.put(f"SERVER: {me} logs out")
-                                await out.put(f"SERVER: {message[1]} logs in")
+                                    await out.put(f"0 SERVER: {me} logs out")
+                                await out.put(f"0 SERVER: {message[1]} logs in")
 
                         me = message[1]
                         clients[me] = asyncio.Queue()
